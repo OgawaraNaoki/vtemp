@@ -1,0 +1,29 @@
+name: test
+
+on:
+  push:
+
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.17.1
+      - name: lint
+        run: deno lint -c deno.jsonc
+      - name: format
+        run: deno fmt -c deno.jsonc --check
+      - name: Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: "npm"
+      - run: npm install
+      - name: test
+        run: npm test
